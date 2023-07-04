@@ -1,4 +1,11 @@
+import 'bootstrap/dist/css/bootstrap.min.css';
+import $ from 'jquery';
+import Popper from 'popper.js';
+import 'bootstrap/dist/js/bootstrap.bundle.min';
+
 import React from 'react';
+
+import {Header} from '../src/layout/header';
 
 class App extends React.Component{
 
@@ -21,8 +28,8 @@ class App extends React.Component{
     const {posts} = this.state;
 
     return(
-      <div className='App'>jk
-    </div>
+      
+      <Header />
     );
   }
 }
