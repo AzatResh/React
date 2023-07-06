@@ -3,7 +3,8 @@ import 'bootstrap/dist/js/bootstrap.bundle.min';
 
 import React from 'react';
 
-import {Header} from '../src/layout/header';
+import {Header} from './layout/Header';
+import {Main} from './layout/Main';
 
 class App extends React.Component{
 
@@ -17,6 +18,7 @@ class App extends React.Component{
     return(
       <>
         <Header />
+        <Main />
       </>
     );
   }
