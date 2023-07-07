@@ -1,22 +1,27 @@
 import React from "react"
+
 import {Movies} from '../components/Movies';
 import { Preloader } from "../components/Preloader";
+import {Header} from './Header';
+import { Search } from "../components/Search";
 
 class Main extends React.Component{
 
-    constructor(props){
-        super(props);
-
-        this.state = {
+    state = {
             movies: [],
         }
-    }
+    
 
     componentDidMount(){
-
-        
         fetch('http://www.omdbapi.com/?apikey=78584b3c&s=batman')
-        .then(resp => resp)
+        .then(resp => resp.json())
+        .then(data => {
+           this.setState({movies: data.Search});
+        });
+    }
+
+    searchMovies = (str) => {
+        fetch('http://www.omdbapi.com/?apikey=78584b3c&s='+str)
         .then(resp => resp.json())
         .then(data => {
            this.setState({movies: data.Search});
@@ -27,15 +32,17 @@ class Main extends React.Component{
         const {movies} = this.state;
         
         return(
-
-            <main>
-                {
-                movies?.length ? 
-                    (<Movies movies = {movies}/>)
-                    : ( <Preloader/> )
-                }
-    
-            </main>
+            <>
+                <Search searchMovies = {this.searchMovies} />
+                <main>
+                    {
+                    movies?.length ? 
+                        (<Movies movies = {movies}/>)
+                        : ( <Preloader/> )
+                    }
+        
+                </main>
+            </>
         );
     }
     
