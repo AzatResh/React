@@ -42,5 +42,10 @@ code {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 1rem;
-  padding: 20px 10px;
+  padding: 0px 10px 20px 10px;
+}
+
+main{
+  max-width: 1140px;
+  margin: 0 auto;
 }
