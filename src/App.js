@@ -9,31 +9,41 @@ import {Movies} from './components/Movies';
 import {Preloader} from './components/Preloader';
 import { event } from 'jquery';
 
+const API_KEY = process.env.REACT_APP_API_KEY;
+
 class App extends React.Component{
 
   state = {
     movies: [],
+    loading: true
   }
 
 
   componentDidMount(){
-    fetch('http://www.omdbapi.com/?apikey=78584b3c&s=avengers')
+    fetch(`http://www.omdbapi.com/?apikey=${API_KEY}&s=avengers`)
       .then(resp => resp.json())
       .then(data => {
-        this.setState({movies: data.Search});
+        this.setState({movies: data.Search, loading: false});
       });
   }
 
-  searchMovies = (str) => {
-    fetch(`http://www.omdbapi.com/?apikey=78584b3c&s=${str}`)
+  searchMovies = (str, type = 'all') => {
+    this.setState({loading: true})
+
+    if(str == '') str = 'Matrix';
+
+    fetch(`http://www.omdbapi.com/?apikey=${API_KEY}&s=${str}${
+        type !== 'all' ? `&type=${type}` : ''
+        }`
+      )
       .then(resp => resp.json())
       .then(data => {
-        this.setState({movies: data.Search});
+        this.setState({movies: data.Search, loading: false});
       });
   }
 
   render(){
-    const {movies} = this.state;
+    const {movies, loading} = this.state;
 
     return(
         <>
@@ -42,7 +52,7 @@ class App extends React.Component{
             <Search searchMovies = {this.searchMovies} />
 
                 {
-                movies?.length ? 
+                !loading ? 
                     (<Movies movies = {movies}/>)
                     : ( <Preloader/> )
                 }
