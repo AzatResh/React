@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 
 import {Header} from './layout/Header';
 import {Search} from './components/Search';
@@ -11,24 +11,26 @@ import { event } from 'jquery';
 
 const API_KEY = process.env.REACT_APP_API_KEY;
 
-class App extends React.Component{
+const App = () => {
 
-  state = {
-    movies: [],
-    loading: true
-  }
+  const [movies, setMovies] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-
-  componentDidMount(){
+  useEffect(()=>{
     fetch(`http://www.omdbapi.com/?apikey=${API_KEY}&s=avengers`)
       .then(resp => resp.json())
       .then(data => {
-        this.setState({movies: data.Search, loading: false});
+        setMovies(data.Search);
+        setLoading(false);
+      }).
+      catch((error)=>{
+        console.log(error);
+        setLoading(false);
       });
-  }
+  }, []);
 
-  searchMovies = (str, type = 'all') => {
-    this.setState({loading: true})
+  const searchMovies = (str, type = 'all') => {
+    setLoading(true);
 
     if(str == '') str = 'Matrix';
 
@@ -38,29 +40,31 @@ class App extends React.Component{
       )
       .then(resp => resp.json())
       .then(data => {
-        this.setState({movies: data.Search, loading: false});
+        setMovies(data.Search);
+        setLoading(false);
+      }).
+      catch((error)=>{
+        console.log(error);
+        setLoading(false);
       });
   }
 
-  render(){
-    const {movies, loading} = this.state;
+  return(
+    <>
+      <Header />
+      <main>
+      <Search searchMovies = {searchMovies} />
 
-    return(
-        <>
-            <Header />
-            <main>
-            <Search searchMovies = {this.searchMovies} />
+          {
+          !loading ? 
+              (<Movies movies = {movies}/>)
+              : ( <Preloader/> )
+          }
 
-                {
-                !loading ? 
-                    (<Movies movies = {movies}/>)
-                    : ( <Preloader/> )
-                }
-
-            </main>
-        </>
-    );
-  }
+      </main>
+    </>
+  );
+  
 }
 
 export default App;
